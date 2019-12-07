@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+
+            if(localStorage.getItem('displayName'))
+            {
+                var name = localStorage.getItem('displayName');
+                window.location.href = "home";
+            }
+            else {
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelector('#form').onsubmit = function() {
+                  const name = document.querySelector('#display_name').value;
+                  if (!localStorage.getItem('displayName'))
+                      localStorage.setItem('displayName', name);
+                    window.location.href = "home";
+                };
+            });
+          }
+        </script>
+        <title>My Website</title>
+    </head>
+    <body>
+        <form id="form">
+            <input id="display_name" autocomplete="off" autofocus placeholder="Type your display name" type="text">
+            <input type="submit">
+        </form>
+    </body>
+</html>
