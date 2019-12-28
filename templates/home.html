@@ -3,13 +3,21 @@
     <head>
       <script>
           localStorage.removeItem("current_channel");
+
+          if(!localStorage.getItem('displayName'))
+          {
+              window.location.href = "/";
+          }
       </script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="static/style.css">
 
       <title>Welcome to Flack</title>
   </head>
   <body>
-      <h1>Welcome to Flack</h1>
+      <h1 id="title" class="text-center">Welcome to Flack</h1>
 
+      <div id="main-box">
       {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div class="notification alert alert-warning" role="alert">
@@ -18,7 +26,7 @@
       {% endif %}
       {% endwith %}
 
-      <ul>
+      <ul id="channels-list">
         {% for channel in channels %}
             <li>
                 <a href="{{ url_for('channel', channel_name=channel) }}">
@@ -28,14 +36,10 @@
         {% endfor %}
       </ul>
 
-      <form action="{{ url_for('new_channel') }}" method="post">
-        <div class="form-group">
-            <input class="form-control" name="channel_name" placeholder="Create a new channel">
-        </div>
-
-        <div class="form-group">
-            <button class="btn btn-primary">Create</button>
-        </div>
+      <form action="{{ url_for('new_channel') }}" method="post" id="form-container">
+            <input id="create-box" type="text" name="channel_name" placeholder="Create a new channel">
+            <button id="create-button" class="btn btn-block btn-primary" type="submit">Create</button>
       </form>
+      </div>
   </body>
 </html>

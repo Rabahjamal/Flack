@@ -7,13 +7,13 @@ import jsons
 from message import *
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+#app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["SECRET_KEY"] = "super secret key"
 #app.config["SESSION_PERMANENT"] = False
 #app.config["SESSION_TYPE"] = "filesystem"
 #Session(app)
 socketio = SocketIO(app)
 
-#channels = [Channel("atary", 1), Channel("alaa", 2)]
 channels = dict()
 
 @app.route("/")
@@ -48,14 +48,12 @@ def handle_message(data):
     sender = data["sender"]
     channel_name = data["channel_name"]
     datetime = data["datetime"]
-    #channels[channel_name].append(Message(sender, message, None))
+
     channels[channel_name].append(jsons.dump(Message(sender, message, datetime, channel_name)))
     if len(channels[channel_name]) == 101:
         del channels[channel_name][1]
     print(message + ': ' + sender + ', ' + channel_name + "@" + datetime)
     emit("messages", jsons.dump(Message(sender, message, datetime, channel_name)), broadcast=True)
-    #print('Message: ' + data)
-    #send(data, broadcast=True)
 
 @socketio.on('new connection')
 def handle_connection(data):
@@ -64,4 +62,3 @@ def handle_connection(data):
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
-    #socketio.run(app)

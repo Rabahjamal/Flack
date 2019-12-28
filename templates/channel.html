@@ -20,21 +20,6 @@
                 localStorage.setItem("current_channel", channel_name);
 
                 socket.emit('new connection', {'channel_name': channel_name});
-
-                /*var today = new Date();
-                var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-                console.log(time + ': ' + display_name + ', ' + channel_name);
-                var msg = " has connected";
-                socket.emit('new message', {'message_text': msg, 'sender': display_name,
-                                            'channel_name': channel_name});
-                  document.querySelector('#sendbutton').onclick = function() {
-                      const message_text = document.querySelector('#message_text').value;
-                    //  var display_name = localStorage.getItem('displayName');
-                    //  var channel_name = '{{ channel_name }}';
-                    //  console.log(message_text + ': ' + display_name + ', ' + channel_name);
-                      socket.emit('new message', {'message_text': message_text, 'sender': display_name,
-                                                  'channel_name': channel_name});
-                  };*/
               });
 
               socket.on('connection', data => {
@@ -63,9 +48,6 @@
                                               'channel_name': channel_name, 'datetime': datetime});
                   localStorage.setItem(channel_name, channel_name);
                 }
-                //var msg = " has connected";
-                //socket.emit('new message', {'message_text': msg, 'sender': display_name,
-                  //                          'channel_name': channel_name});
                 document.querySelector('#sendbutton').onclick = function() {
                     const message_text = document.querySelector('#message_text').value;
                     var currentdate = new Date();
@@ -89,35 +71,25 @@
                   li.innerHTML = `${data["sender"]}: ${data["text"]} @${data["datetime"]}`;
                   document.querySelector('#messages').append(li);
                 }
-
-                /*console.log(data.length);
-                for(var i = 1; i < data.length; i++)
-                {
-                  console.log(data[i]["sender"] + ": " + data[i]["text"]);
-                  const li = document.createElement('li');
-                  li.innerHTML = `${data[i]["sender"]}: ${data[i]["text"]}`;
-                  document.querySelector('#messages').append(li);
-                }*/
-                //li.innerHTML = `${name}: ${data}`;
-                //document.querySelector('#messages').append(li);
               });
           });
       </script>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="../static/style.css">
       <title>Welcome to Flack</title>
   </head>
   <body>
-      <h1>Welcome in {{ channel_name }} channel</h1>
+      <h1 id="title" class="text-center">Welcome in {{ channel_name }} channel</h1>
 
-      <ul id="messages">
+      <div id="main-box">
+        <ul id="messages">
 
-      </ul>
-
-      <!--<form id="form">
-            <input id="message_text" autofocus name="message" placeholder="Enter your message" type="text">
-            <!- - <input type="submit"> - ->
-            <button id="submit-button"class="btn btn-primary">Submit</button>
-      </form> -->
-      <input type="text" id="message_text">
-      <button id="sendbutton">Send</button>
+        </ul>
+        
+        <div id="message-box">
+          <input id="message_text" type="text">
+          <button id="sendbutton" class="btn btn-block btn-primary">Send</button>
+        </div>
+     </div>
   </body>
 </html>
