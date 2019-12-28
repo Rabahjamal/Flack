@@ -5,27 +5,94 @@
       <script>
           document.addEventListener('DOMContentLoaded', () => {
 
+              if(!localStorage.getItem('displayName'))
+              {
+                  window.location.href = "/";
+              }
+
               // Connect to websocket
               var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
               console.log(location.protocol + '//' + document.domain + ':' + location.port);
 
               // When connected, configure buttons
               socket.on('connect', () => {
+                var channel_name = '{{ channel_name }}';
 
+                socket.emit('new connection', {'channel_name': channel_name});
+
+                /*var today = new Date();
+                var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                console.log(time + ': ' + display_name + ', ' + channel_name);
+                var msg = " has connected";
+                socket.emit('new message', {'message_text': msg, 'sender': display_name,
+                                            'channel_name': channel_name});
                   document.querySelector('#sendbutton').onclick = function() {
                       const message_text = document.querySelector('#message_text').value;
-                      console.log(message_text);
-                      socket.emit('new message', {'message_text': message_text});
+                    //  var display_name = localStorage.getItem('displayName');
+                    //  var channel_name = '{{ channel_name }}';
+                    //  console.log(message_text + ': ' + display_name + ', ' + channel_name);
+                      socket.emit('new message', {'message_text': message_text, 'sender': display_name,
+                                                  'channel_name': channel_name});
+                  };*/
+              });
+
+              socket.on('connection', data => {
+                var display_name = localStorage.getItem('displayName');
+                var channel_name = '{{ channel_name }}';
+
+                var today = new Date();
+                var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+                console.log(time + ': ' + display_name + ', ' + channel_name);
+
+                for(var i = 1; i < data.length; i++)
+                {
+                  console.log(data[i]["sender"] + ": " + data[i]["text"]);
+                  const li = document.createElement('li');
+                  li.innerHTML = `${data[i]["sender"]}: ${data[i]["text"]}`;
+                  document.querySelector('#messages').append(li);
+                }
+
+                if(!localStorage.getItem(channel_name))
+                {
+                  var msg = " has connected";
+                  socket.emit('new message', {'message_text': msg, 'sender': display_name,
+                                              'channel_name': channel_name});
+                  localStorage.setItem(channel_name, channel_name);
+                }
+                //var msg = " has connected";
+                //socket.emit('new message', {'message_text': msg, 'sender': display_name,
+                  //                          'channel_name': channel_name});
+                  document.querySelector('#sendbutton').onclick = function() {
+                      const message_text = document.querySelector('#message_text').value;
+                    //  var display_name = localStorage.getItem('displayName');
+                    //  var channel_name = '{{ channel_name }}';
+                    //  console.log(message_text + ': ' + display_name + ', ' + channel_name);
+                      socket.emit('new message', {'message_text': message_text, 'sender': display_name,
+                                                  'channel_name': channel_name});
                   };
               });
 
               // When a new vote is announced, add to the unordered list
               socket.on('messages', data => {
-                console.log("da5l")
-                const li = document.createElement('li');
-                var name = localStorage.getItem('displayName');
-                li.innerHTML = `${name}: ${data}`;
-                document.querySelector('#messages').append(li);
+                var channel_name = '{{ channel_name }}';
+
+                if(channel_name == data["channel_name"])
+                {
+                  const li = document.createElement('li');
+                  li.innerHTML = `${data["sender"]}: ${data["text"]}`;
+                  document.querySelector('#messages').append(li);
+                }
+
+                /*console.log(data.length);
+                for(var i = 1; i < data.length; i++)
+                {
+                  console.log(data[i]["sender"] + ": " + data[i]["text"]);
+                  const li = document.createElement('li');
+                  li.innerHTML = `${data[i]["sender"]}: ${data[i]["text"]}`;
+                  document.querySelector('#messages').append(li);
+                }*/
+                //li.innerHTML = `${name}: ${data}`;
+                //document.querySelector('#messages').append(li);
               });
           });
       </script>
