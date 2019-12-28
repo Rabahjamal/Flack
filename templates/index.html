@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html>
-    <head>
+{% extends "base.html" %}
+<!-- <html>
+    <head> -->
+      {% block script %}
         <script>
 
             if(localStorage.getItem('displayName'))
             {
                 var name = localStorage.getItem('displayName');
-                window.location.href = "home";
+                if(!localStorage.getItem("current_channel")) {
+                    window.location.href = "home";
+                }
+                else {
+                    var channel_name = localStorage.getItem("current_channel");
+                    window.location.href = "channel/" + channel_name;
+                }
             }
             else {
             document.addEventListener('DOMContentLoaded', function() {
@@ -19,12 +27,23 @@
             });
           }
         </script>
-        <title>My Website</title>
-    </head>
-    <body>
-        <form id="form">
-            <input id="display_name" autocomplete="off" autofocus placeholder="Type your display name" type="text">
-            <input type="submit">
-        </form>
-    </body>
-</html>
+        {% endblock %}
+    <!--    <title>Flack</title>
+    </head> -->
+  <!--  <body> -->
+      {% block content %}
+        <div class="column is-4 is-offset-4">
+          <div class="box">
+            <form id="form">
+              <div class="field">
+                    <div class="control">
+                      <input class="input is-large" id="display_name" autocomplete="off" autofocus placeholder="Type your display name" type="text">
+                    </div>
+              </div>
+                <input class="button is-block is-info is-large is-fullwidth" type="submit">
+            </form>
+          </div>
+        </div>
+      {% endblock %}
+<!--    </body>
+</html> -->

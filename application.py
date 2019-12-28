@@ -47,12 +47,13 @@ def handle_message(data):
     message = data["message_text"]
     sender = data["sender"]
     channel_name = data["channel_name"]
+    datetime = data["datetime"]
     #channels[channel_name].append(Message(sender, message, None))
-    channels[channel_name].append(jsons.dump(Message(sender, message, None, channel_name)))
+    channels[channel_name].append(jsons.dump(Message(sender, message, datetime, channel_name)))
     if len(channels[channel_name]) == 101:
         del channels[channel_name][1]
-    print(message + ': ' + sender + ', ' + channel_name)
-    emit("messages", jsons.dump(Message(sender, message, None, channel_name)), broadcast=True)
+    print(message + ': ' + sender + ', ' + channel_name + "@" + datetime)
+    emit("messages", jsons.dump(Message(sender, message, datetime, channel_name)), broadcast=True)
     #print('Message: ' + data)
     #send(data, broadcast=True)
 
